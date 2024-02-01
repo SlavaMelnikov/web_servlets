@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-//import static by.melnikov.webservlets.model.connection.DatabaseParameters.*;
+import static by.melnikov.webservlets.model.connection.DatabaseParameters.*;
 
 public class ConnectionFactory {
     private static final Logger logger = LogManager.getLogger();
@@ -28,7 +28,7 @@ public class ConnectionFactory {
     static Connection createConnection() {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/mybyke", "root", "UltraMelok1997");
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Connection wasn't created: " + e.getMessage());
         }

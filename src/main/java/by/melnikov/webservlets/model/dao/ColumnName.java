@@ -7,7 +7,7 @@ public final class ColumnName {
      */
     public static final String USERS = "users";
     public static final String USER_ID = "user_id";
-    public static final String USER_LOGIN = "login";
+    public static final String USER_LOGIN = "authenticate";
     public static final String USER_PASSWORD = "password";
     public static final String USER_ROLE = "role";
     public static final String USER_STATUS = "status";

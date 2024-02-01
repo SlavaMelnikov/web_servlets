@@ -5,11 +5,11 @@ import by.melnikov.webservlets.model.entity.User;
 
 public interface CommonService {
     User registration() throws ServiceException;
-    boolean login(String login, String password);
-    void logout();
-    boolean changeEmail(String newEmail);
-    boolean changeLogin(String newLogin);
-    boolean changeName(String newName);
-    boolean changeLastName(String newLastName);
-    boolean changePhone(String newPhone);
+    boolean authenticate(String login, String password) throws ServiceException;
+    void logout() throws ServiceException;
+    boolean changeEmail(String newEmail) throws ServiceException;
+    boolean changeLogin(String newLogin) throws ServiceException;
+    boolean changeName(String newName) throws ServiceException;
+    boolean changeLastName(String newLastName) throws ServiceException;
+    boolean changePhone(String newPhone) throws ServiceException;
 }

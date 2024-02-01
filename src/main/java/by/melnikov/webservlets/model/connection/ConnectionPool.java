@@ -12,13 +12,12 @@ import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-//import static by.melnikov.webservlets.model.connection.DatabaseParameters.CONNECTION_POOL_DEFAULT_SIZE;
+import static by.melnikov.webservlets.model.connection.DatabaseParameters.CONNECTION_POOL_DEFAULT_SIZE;
 
 public enum ConnectionPool {
     INSTANCE;
 
     private final Logger logger = LogManager.getLogger();
-    private static final int CONNECTION_POOL_DEFAULT_SIZE = 16;
     private BlockingQueue<Connection> availableConnections;
     private Queue<Connection> usedConnections;
 
@@ -72,7 +71,7 @@ public enum ConnectionPool {
 
     public boolean releaseConnection(Connection connection) {
         boolean isProxy;
-        if (ProxyConnection.class == connection.getClass()) {
+        if (connection.getClass() == ProxyConnection.class) {
             usedConnections.remove(connection);
             availableConnections.add(connection);
             isProxy = true;

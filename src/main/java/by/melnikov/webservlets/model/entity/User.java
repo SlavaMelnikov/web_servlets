@@ -160,7 +160,7 @@ public class User extends AbstractEntity {
     public String toString() {
         return "User{" +
                 "userId=" + userId +
-                ", login='" + login + '\'' +
+                ", authenticate='" + login + '\'' +
                 ", role=" + role +
                 ", status=" + status +
                 ", email='" + email + '\'' +

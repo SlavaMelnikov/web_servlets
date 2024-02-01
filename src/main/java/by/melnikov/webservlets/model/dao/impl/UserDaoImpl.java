@@ -4,6 +4,8 @@ import by.melnikov.webservlets.exception.DaoException;
 import by.melnikov.webservlets.model.connection.ConnectionPool;
 import by.melnikov.webservlets.model.dao.UserDao;
 import by.melnikov.webservlets.model.entity.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -11,9 +13,7 @@ import java.util.List;
 
 public class UserDaoImpl implements UserDao {
     private static final String LOGIN_USER = "SELECT password FROM users WHERE login = ?";
-    private static final String FIND_USERS_BY_BIRTHDATE = "SELECT user FROM users WHERE birthdate = ?";
-    private static final String FIND_USER_BY_ORDERS_COUNT = "SELECT user FROM users WHERE orders_count = ?";
-    private static final String FIND_USER_BY_ID = "SELECT login FROM users WHERE user_id = ?";
+    private static final String FIND_USER_BY_ID = "SELECT * FROM users WHERE user_id = ?";
     private static final UserDaoImpl INSTANCE = new UserDaoImpl();
 
     private UserDaoImpl() {
@@ -24,23 +24,21 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public boolean login(String login, String password) {
-        boolean isValidUser = false;
+    public boolean authenticate(String login, String password) throws DaoException {
+        boolean isAuthenticateSuccessful = false;
         try (Connection connection = ConnectionPool.INSTANCE.getConnection();
-             Statement statement = connection.createStatement()) {
-
-            String query = "SELECT password FROM users WHERE login = '" + login + "'";
-            ResultSet resultSet = statement.executeQuery(query);
+             PreparedStatement preparedStatement = connection.prepareStatement(LOGIN_USER)) {
+            preparedStatement.setString(1, login);
+            ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
-            String dbPassword = resultSet.getString("password");
-            if (dbPassword.equals(password)) {
-                isValidUser = true;
-                return isValidUser;
+            String passwordFromDatabase = resultSet.getString("password");
+            if (password.equals(passwordFromDatabase)) {
+                isAuthenticateSuccessful = true;
             }
         } catch (SQLException e) {
-            throw new RuntimeException();
+            throw new DaoException(e.getMessage(), e);
         }
-        return isValidUser;
+        return isAuthenticateSuccessful;
     }
 
 
@@ -61,18 +59,15 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findById(int id) throws DaoException {
-        User user = new User();
         try (Connection connection = ConnectionPool.INSTANCE.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_BY_ID);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_BY_ID)) {
             preparedStatement.setInt(1, 2);
+            ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
-            user.setUserId(resultSet.getInt(1));
-            user.setLogin(resultSet.getString(2));
         } catch (SQLException e) {
+            throw new DaoException(e.getMessage(), e);
         }
-        return user;
+        return null; //todo
     }
 
     @Override

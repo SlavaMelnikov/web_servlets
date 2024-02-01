@@ -1,5 +1,7 @@
 package by.melnikov.webservlets.model.service.impl;
 
+import by.melnikov.webservlets.exception.DaoException;
+import by.melnikov.webservlets.exception.ServiceException;
 import by.melnikov.webservlets.model.dao.UserDao;
 import by.melnikov.webservlets.model.dao.impl.UserDaoImpl;
 import by.melnikov.webservlets.model.entity.User;
@@ -16,52 +18,57 @@ public class CommonServiceImpl implements CommonService {
     private static final CommonServiceImpl instance = new CommonServiceImpl();
 
     private CommonServiceImpl() {
-
     }
 
     public static CommonServiceImpl getInstance() {
         return instance;
     }
+
     @Override
-    public User registration() {
+    public User registration() throws ServiceException {
         return null;
     }
 
     @Override
-    public boolean login(String login, String password) {
-//        validate login, password, шифрование + md5. Если не проходит, сразу false
+    public boolean authenticate(String login, String password) throws ServiceException {
+//        validate authenticate, password, шифрование + md5. Если не проходит, сразу false
         UserDao userDao = UserDaoImpl.getInstance();
-        boolean match = userDao.login(login, password);
+        boolean match = false;
+        try {
+            match = userDao.authenticate(login, password);
+        } catch (DaoException e) {
+            throw new ServiceException(e.getMessage(), e);
+        }
         return match;
     }
 
     @Override
-    public void logout() {
+    public void logout() throws ServiceException {
 
     }
 
     @Override
-    public boolean changeEmail(String newEmail) {
+    public boolean changeEmail(String newEmail) throws ServiceException {
         return false;
     }
 
     @Override
-    public boolean changeLogin(String newLogin) {
+    public boolean changeLogin(String newLogin) throws ServiceException {
         return false;
     }
 
     @Override
-    public boolean changeName(String newName) {
+    public boolean changeName(String newName) throws ServiceException {
         return false;
     }
 
     @Override
-    public boolean changeLastName(String newLastName) {
+    public boolean changeLastName(String newLastName) throws ServiceException {
         return false;
     }
 
     @Override
-    public boolean changePhone(String newPhone) {
+    public boolean changePhone(String newPhone) throws ServiceException {
         return false;
     }
 }

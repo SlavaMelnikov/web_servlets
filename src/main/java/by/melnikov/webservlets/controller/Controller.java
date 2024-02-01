@@ -5,6 +5,7 @@ import java.io.*;
 import by.melnikov.webservlets.controller.command.CommandType;
 import by.melnikov.webservlets.controller.command.ICommand;
 import by.melnikov.webservlets.exception.CommandException;
+import by.melnikov.webservlets.model.connection.ConnectionPool;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
@@ -25,10 +26,11 @@ public class Controller extends HttpServlet {
             page = command.execute(request);
             request.getRequestDispatcher(page).forward(request, response);
         } catch (CommandException e) {
-            throw new RuntimeException(e);
+            throw new ServletException(e);
         }
     }
 
     public void destroy() {
+        ConnectionPool.INSTANCE.destroyPool();
     }
 }
